@@ -32,7 +32,7 @@ MIDI.loadPlugin = function(conf) {
 	for (var n = 0; n < instruments.length; n ++) {
 		var instrument = instruments[n];
 		if (typeof(instrument) === "number") {
-			instruments[n] = MIDI.GeneralMIDI.byId[instrument];
+			instruments[n] = MIDI.GeneralMIDI.byId[instrument].id;
 		}
 	};
 	///
@@ -107,14 +107,18 @@ connect.audiotag = function(filetype, instruments, conf) {
 					}
 				});
 			} else {
-				DOMLoader.script.add({
-					src: MIDI.soundfontUrl + instrumentId + "-" + filetype + ".js",
-					verify: "MIDI.Soundfont." + instrumentId,
-					callback: function() {
-						if (MIDI.loader) MIDI.loader.update(null, "Downloading...", 100);
-						queue.getNext();
-					}
-				});
+				if(MIDI.Soundfont[instrumentId]){
+					queue.getNext();
+				} else {
+					DOMLoader.script.add({
+						src: MIDI.soundfontUrl + instrumentId + "-" + filetype + ".js",
+						verify: "MIDI.Soundfont." + instrumentId,
+						callback: function() {
+							if (MIDI.loader) MIDI.loader.update(null, "Downloading...", 100);
+							queue.getNext();
+						}
+					});
+				}
 			}
 		},
 		onComplete: function() {
@@ -140,14 +144,19 @@ connect.webaudio = function(filetype, instruments, conf) {
 					}
 				});
 			} else {
-				DOMLoader.script.add({
-					src: MIDI.soundfontUrl + instrumentId + "-" + filetype + ".js",
-					verify: "MIDI.Soundfont." + instrumentId,
-					callback: function() {
-						if (MIDI.loader) MIDI.loader.update(null, "Downloading...", 100);
-						queue.getNext();
-					}
-				});
+				if(MIDI.Soundfont[instrumentId]){
+					queue.getNext();
+				} else {
+					DOMLoader.script.add({
+						src: MIDI.soundfontUrl + instrumentId + "-" + filetype + ".js",
+						verify: "MIDI.Soundfont." + instrumentId,
+						callback: function() {
+							if (MIDI.loader) MIDI.loader.update(null, "Downloading...", 100);
+							$("#alarm").append("loaded"+instrumentId+" ");
+							queue.getNext();
+						}
+					});
+				}
 			}
 		},
 		onComplete: function() {
