@@ -152,7 +152,6 @@ connect.webaudio = function(filetype, instruments, conf) {
 						verify: "MIDI.Soundfont." + instrumentId,
 						callback: function() {
 							if (MIDI.loader) MIDI.loader.update(null, "Downloading...", 100);
-							$("#alarm").append("loaded"+instrumentId+" ");
 							queue.getNext();
 						}
 					});
