@@ -67,6 +67,7 @@ function Replayer(midiFile, timeWarp, eventProcessor) {
 	//
 	var midiEvent;
 	var temporal = [];
+	var tickcounter = 0;
 	//
 	function processEvents() {
 		function processNext() {
@@ -79,8 +80,10 @@ function Replayer(midiFile, timeWarp, eventProcessor) {
 				var secondsToGenerate = beatsToGenerate / (beatsPerMinute / 60);
 			}
 			var time = (secondsToGenerate * 1000 * timeWarp) || 0;
+			midiEvent.ticks = tickcounter;
 			temporal.push([ midiEvent, time]);
 			midiEvent = getNextEvent();
+			if(midiEvent) tickcounter += midiEvent.ticksToEvent;
 		};
 		//
 		if (midiEvent = getNextEvent()) {
