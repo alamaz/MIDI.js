@@ -63,5 +63,20 @@
 		} while (i < input.length);
 		return unescape(output);
 	});
+	
+window.hexToBase64 =function(str) {
+  return btoa(String.fromCharCode.apply(null,
+    str.replace(/\r|\n/g, "").replace(/([\da-fA-F]{2}) ?/g, "0x$1 ").replace(/ +$/, "").split(" "))
+  );
+}
+
+window.base64ToHex = function(str) {
+  for (var i = 0, bin = atob(str.replace(/[ \r\n]+$/, "")), hex = []; i < bin.length; ++i) {
+    var tmp = bin.charCodeAt(i).toString(16);
+    if (tmp.length === 1) tmp = "0" + tmp;
+    hex[hex.length] = tmp;
+  }
+  return hex.join(" ");
+}
 
 }(this));
